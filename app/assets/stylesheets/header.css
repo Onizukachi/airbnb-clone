@@ -1,0 +1,11 @@
+.nav-container {
+    height: 80px;
+    align-items: center;
+}
+
+.logo-link {
+    svg {
+        display: block;
+        color: #FF385C;
+    }
+}
