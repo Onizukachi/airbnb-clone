@@ -1087,7 +1087,7 @@
                     return false;
                   }
                   ;
-                  function getComputedStyle(element) {
+                  function getComputedStyle2(element) {
                     return getWindow(element).getComputedStyle(element);
                   }
                   ;
@@ -1120,7 +1120,7 @@
                   ;
                   function getTrueOffsetParent(element) {
                     if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
-                    getComputedStyle(element).position === "fixed") {
+                    getComputedStyle2(element).position === "fixed") {
                       return null;
                     }
                     return element.offsetParent;
@@ -1129,7 +1129,7 @@
                     var isFirefox = /firefox/i.test(getUAString());
                     var isIE = /Trident/i.test(getUAString());
                     if (isIE && isHTMLElement(element)) {
-                      var elementCss = getComputedStyle(element);
+                      var elementCss = getComputedStyle2(element);
                       if (elementCss.position === "fixed") {
                         return null;
                       }
@@ -1139,7 +1139,7 @@
                       currentNode = currentNode.host;
                     }
                     while (isHTMLElement(currentNode) && ["html", "body"].indexOf(getNodeName(currentNode)) < 0) {
-                      var css = getComputedStyle(currentNode);
+                      var css = getComputedStyle2(currentNode);
                       if (css.transform !== "none" || css.perspective !== "none" || css.contain === "paint" || ["transform", "perspective"].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === "filter" || isFirefox && css.filter && css.filter !== "none") {
                         return currentNode;
                       } else {
@@ -1151,10 +1151,10 @@
                   function getOffsetParent(element) {
                     var window2 = getWindow(element);
                     var offsetParent = getTrueOffsetParent(element);
-                    while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === "static") {
+                    while (offsetParent && isTableElement(offsetParent) && getComputedStyle2(offsetParent).position === "static") {
                       offsetParent = getTrueOffsetParent(offsetParent);
                     }
-                    if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle(offsetParent).position === "static")) {
+                    if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle2(offsetParent).position === "static")) {
                       return window2;
                     }
                     return offsetParent || getContainingBlock(element) || window2;
@@ -1300,7 +1300,7 @@
                       var widthProp = "clientWidth";
                       if (offsetParent === getWindow(popper2)) {
                         offsetParent = getDocumentElement(popper2);
-                        if (getComputedStyle(offsetParent).position !== "static" && position === "absolute") {
+                        if (getComputedStyle2(offsetParent).position !== "static" && position === "absolute") {
                           heightProp = "scrollHeight";
                           widthProp = "scrollWidth";
                         }
@@ -1492,7 +1492,7 @@
                     var height = math_max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
                     var x = -winScroll.scrollLeft + getWindowScrollBarX(element);
                     var y = -winScroll.scrollTop;
-                    if (getComputedStyle(body || html).direction === "rtl") {
+                    if (getComputedStyle2(body || html).direction === "rtl") {
                       x += math_max(html.clientWidth, body ? body.clientWidth : 0) - width;
                     }
                     return {
@@ -1504,7 +1504,7 @@
                   }
                   ;
                   function isScrollParent(element) {
-                    var _getComputedStyle = getComputedStyle(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
+                    var _getComputedStyle = getComputedStyle2(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
                     return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
                   }
                   ;
@@ -1560,7 +1560,7 @@
                   }
                   function getClippingParents(element) {
                     var clippingParents2 = listScrollParents(getParentNode(element));
-                    var canEscapeClipping = ["absolute", "fixed"].indexOf(getComputedStyle(element).position) >= 0;
+                    var canEscapeClipping = ["absolute", "fixed"].indexOf(getComputedStyle2(element).position) >= 0;
                     var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
                     if (!isElement(clipperElement)) {
                       return [];
@@ -12545,15 +12545,74 @@
   application.debug = false;
   window.Stimulus = application;
 
-  // app/javascript/controllers/hello_controller.js
-  var hello_controller_default = class extends Controller {
+  // node_modules/el-transition/index.js
+  async function enter(element, transitionName = null) {
+    element.classList.remove("hidden");
+    await transition("enter", element, transitionName);
+  }
+  async function leave(element, transitionName = null) {
+    await transition("leave", element, transitionName);
+    element.classList.add("hidden");
+  }
+  async function toggle(element, transitionName = null) {
+    if (element.classList.contains("hidden")) {
+      await enter(element, transitionName);
+    } else {
+      await leave(element, transitionName);
+    }
+  }
+  async function transition(direction, element, animation) {
+    const dataset = element.dataset;
+    const animationClass = animation ? `${animation}-${direction}` : direction;
+    let transition2 = `transition${direction.charAt(0).toUpperCase() + direction.slice(1)}`;
+    const genesis = dataset[transition2] ? dataset[transition2].split(" ") : [animationClass];
+    const start2 = dataset[`${transition2}Start`] ? dataset[`${transition2}Start`].split(" ") : [`${animationClass}-start`];
+    const end = dataset[`${transition2}End`] ? dataset[`${transition2}End`].split(" ") : [`${animationClass}-end`];
+    addClasses(element, genesis);
+    addClasses(element, start2);
+    await nextFrame();
+    removeClasses(element, start2);
+    addClasses(element, end);
+    await afterTransition(element);
+    removeClasses(element, end);
+    removeClasses(element, genesis);
+  }
+  function addClasses(element, classes) {
+    element.classList.add(...classes);
+  }
+  function removeClasses(element, classes) {
+    element.classList.remove(...classes);
+  }
+  function nextFrame() {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(resolve);
+      });
+    });
+  }
+  function afterTransition(element) {
+    return new Promise((resolve) => {
+      const computedDuration = getComputedStyle(element).transitionDuration.split(",")[0];
+      const duration = Number(computedDuration.replace("s", "")) * 1e3;
+      setTimeout(() => {
+        resolve();
+      }, duration);
+    });
+  }
+
+  // app/javascript/controllers/header_controller.js
+  var header_controller_default = class extends Controller {
+    static targets = ["openUserMenu"];
     connect() {
-      this.element.textContent = "Hello World!";
+      this.openUserMenuTarget.addEventListener("click", this.toggleDropdownMenu);
+    }
+    toggleDropdownMenu() {
+      toggle(document.querySelector("#menu-dropdown-items"));
     }
   };
 
   // app/javascript/controllers/index.js
-  application.register("hello", hello_controller_default);
+  application.register("header", header_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());
