@@ -12602,17 +12602,44 @@
 
   // app/javascript/controllers/header_controller.js
   var header_controller_default = class extends Controller {
-    static targets = ["openUserMenu"];
+    static targets = ["openUserMenu", "userAuthLink"];
     connect() {
       this.openUserMenuTarget.addEventListener("click", this.toggleDropdownMenu);
+      this.userAuthLinkTargets.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelector("#modal-trigger").click();
+        });
+      });
     }
     toggleDropdownMenu() {
       toggle(document.querySelector("#menu-dropdown-items"));
     }
   };
 
+  // app/javascript/controllers/modal_controller.js
+  var modal_controller_default = class extends Controller {
+    connect() {
+      document.querySelector("#modal-wrapper").addEventListener("click", this.closeModal);
+    }
+    showModal() {
+      enter(document.querySelector("#modal-wrapper"));
+      enter(document.querySelector("#modal-backdrop"));
+      enter(document.querySelector("#modal-panel"));
+    }
+    closeModal(event) {
+      const modalPanelClicked = document.getElementById("modal-panel").contains(event.target);
+      if (!modalPanelClicked && event.target.id !== "modal-trigger") {
+        leave(document.querySelector("#modal-wrapper"));
+        leave(document.querySelector("#modal-backdrop"));
+        leave(document.querySelector("#modal-panel"));
+      }
+    }
+  };
+
   // app/javascript/controllers/index.js
   application.register("header", header_controller_default);
+  application.register("modal", modal_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());

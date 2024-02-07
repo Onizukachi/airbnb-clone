@@ -5,4 +5,6 @@
 import { application } from "./application"
 
 import HelloController from "./header_controller"
+import ModalController from "./modal_controller";
 application.register("header", HelloController)
+application.register("modal", ModalController)
