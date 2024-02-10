@@ -12619,8 +12619,14 @@
 
   // app/javascript/controllers/modal_controller.js
   var modal_controller_default = class extends Controller {
+    static targets = ["closeButton"];
     connect() {
       document.querySelector("#modal-wrapper").addEventListener("click", this.closeModal);
+      this.closeButtonTarget.addEventListener("click", () => {
+        leave(document.querySelector("#modal-wrapper"));
+        leave(document.querySelector("#modal-backdrop"));
+        leave(document.querySelector("#modal-panel"));
+      });
     }
     showModal() {
       enter(document.querySelector("#modal-wrapper"));
