@@ -1,0 +1,46 @@
+<div data-controller="users-by-email-auth">
+  <div>
+    <div class="mb-4 flex">
+      <div class="grow-0 p-1 rounded-full hover:bg-gray-200 cursor-pointer" data-modal-target="closeButton">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </div>
+
+      <div class="grow">
+        <h3 class="pr-7 text-md text-center font-semibold leading-6 text-gray-900" id="modal-title">Log in or sign up</h3>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div class="absolute inset-0 flex items-center" aria-hidden="true">
+        <div class="w-full border-t border-gray-300"></div>
+      </div>
+    </div>
+
+    <div class="pt-4">
+      <h4 class="text-2xl leading-6 font-medium text-gray-900 mt-2">Welcome to Airbnb</h4>
+      <div class="rounded-lg mt-6 px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-black">
+        <label for="email" class="block text-xs font-medium text-gray-900">Email</label>
+        <input data-users-by-email-auth-target="email" type="text" name="email" id="email" class="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="hikaru@mail.ru">
+      </div>
+    </div>
+  </div>
+  <div class="my-5 sm:my-6">
+    <button data-users-by-email-auth-target="submit" type="button" class="w-full rounded-lg airbnb-pick-gradient px-6 py-3 text-base font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Continue</button>
+  </div>
+</div>
+<div class="relative">
+  <div class="absolute inset-0 flex items-center" aria-hidden="true">
+    <div class="w-full border-t border-gray-300"></div>
+  </div>
+  <div class="relative flex justify-center">
+    <span class="bg-white px-2 text-sm text-gray-500"> or </span>
+  </div>
+</div>
+<div class="mt-5 sm:mt-6">
+  <button type="button" class="w-full inline-flex justify-center items-center rounded-lg bg-white px-6 py-3 text-base font-medium text-gray-700 border border-black shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="display: block; height: 20px; width: 20px; margin-right: 10px" aria-hidden="true" role="presentation" focusable="false"><path fill="#1877F2" d="M32 0v32H0V0z"></path><path fill="#FFF" d="M22.94 16H18.5v-3c0-1.27.62-2.5 2.6-2.5h2.02V6.56s-1.83-.31-3.58-.31c-3.65 0-6.04 2.21-6.04 6.22V16H9.44v4.63h4.06V32h5V20.62h3.73l.7-4.62z"></path></svg>
+    Continue with Facebook
+  </button>
+</div>

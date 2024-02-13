@@ -12643,9 +12643,23 @@
     }
   };
 
+  // app/javascript/controllers/users_by_email_auth_controller.js
+  var users_by_email_auth_controller_default = class extends Controller {
+    static targets = ["email", "submit"];
+    connect() {
+      this.submitTarget.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (this.emailTarget.value.length === 0) {
+        } else {
+        }
+      });
+    }
+  };
+
   // app/javascript/controllers/index.js
   application.register("header", header_controller_default);
   application.register("modal", modal_controller_default);
+  application.register("users-by-email-auth", users_by_email_auth_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());

@@ -4,7 +4,9 @@
 
 import { application } from "./application"
 
-import HelloController from "./header_controller"
+import HelloController from "./header_controller";
 import ModalController from "./modal_controller";
-application.register("header", HelloController)
-application.register("modal", ModalController)
+import UsersByEmailAuthController from "./users_by_email_auth_controller";
+application.register("header", HelloController);
+application.register("modal", ModalController);
+application.register("users-by-email-auth", UsersByEmailAuthController)
