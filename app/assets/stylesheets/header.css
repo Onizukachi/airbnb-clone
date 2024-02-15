@@ -9,3 +9,18 @@
         color: #FF385C;
     }
 }
+
+.invalid-inset-input-text-field {
+    border-color: rgb(244, 63, 94) !important;
+    label  {
+        color: rgb(244, 63, 94) !important;
+    }
+
+    input[type="text"]:focus-within, input[type="email"]:focus-within {
+        border-color: rgb(244, 63, 94) !important;
+    }
+
+    input[type="text"], input[type="email"] {
+        color: rgb(244, 63, 94) !important;
+    }
+}
