@@ -78,8 +78,12 @@
           >
             <!-- Active: "bg-gray-100", Not Active: "" -->
             <div class="py-1" role="none">
-              <a data-header-target="userAuthLink" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Sign Up</a>
-              <a data-header-target="userAuthLink" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Log in</a>
+              <% if user_signed_in? %>
+                <%= link_to 'Log out', destroy_user_session_path, data: { turbo_method: 'delete' }, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+              <% else %>
+                <a data-header-target="userAuthLink" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Sign Up</a>
+                <a data-header-target="userAuthLink" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Log in</a>
+              <% end %>
             </div>
             <div class="py-1" role="none">
               <a href="#"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Host your home</a>

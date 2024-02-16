@@ -7,6 +7,8 @@ gem "rails", "~> 7.1.2"
 
 gem "devise"
 
+gem 'faker'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
@@ -76,6 +78,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem 'shoulda-matchers', '~> 6.0'
 end
 
 gem 'dotenv-rails', groups: [:development, :test]
