@@ -14,6 +14,8 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 
+require "money-rails/test_helpers"
+
 RSpec.configure do |config|
 
   config.fixture_paths = [

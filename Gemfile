@@ -11,6 +11,10 @@ gem 'faker'
 
 gem 'geocoder'
 
+gem 'money-rails', '~> 1.12'
+
+gem "image_processing", ">= 1.2"
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
