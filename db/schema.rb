@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_18_070746) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_18_102236) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_070746) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "address_1"
+    t.string "address_2"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "zip_code"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
   create_table "properties", force: :cascade do |t|
     t.string "name"
     t.string "headline"
@@ -49,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_070746) do
     t.string "address_2"
     t.float "latitude"
     t.float "longitude"
+    t.string "zip_code"
     t.index ["latitude", "longitude"], name: "index_properties_on_latitude_and_longitude"
   end
 
@@ -66,4 +82,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_070746) do
 
   add_foreign_key "books_genres", "books"
   add_foreign_key "books_genres", "genres"
+  add_foreign_key "profiles", "users"
 end

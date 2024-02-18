@@ -1,34 +1,40 @@
 import { Controller } from "@hotwired/stimulus"
 import { getDistance, convertDistance } from 'geolib';
+import { isEmpty } from 'lodash-es';
 
 export default class extends Controller {
-    static targets = ['property']
+    static targets = ['property'];
 
     connect() {
-        window.navigator.geolocation.getCurrentPosition((position) => {
-            this.propertyTargets.forEach((propertyTarget) => {
-                const lon = propertyTarget.dataset.propertyLongitude;
-                const lan = propertyTarget.dataset.propertyLatitude;
+        if (isEmpty(this.element.dataset.latitude) && isEmpty(this.element.dataset.longitude)) {
+            window.navigator.geolocation.getCurrentPosition((position) => {
+                this.setUserCoordinates({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+            });
+        }
 
-                let distanceFrom = getDistance(
-                { latitude: position.coords.latitude, longitude: position.coords.longitude },
-                { latitude: lan, longitude: lon }
-                );
-
-                let distanceFromKm = convertDistance(distanceFrom, 'km')
-                propertyTarget.querySelector("#distance-away").textContent = `${Math.round(distanceFromKm)} kilometers away`
-
-            })
-        })
+        this.setDistanceText()
     }
 
-    calculateDistance(from_lat, from_lon) {
-        this.distanceAwayTargets.forEach((el) => {
-            getDistance(
-                { latitude: from_lat, longitude: from_lon },
-                { latitude: "51° 31' N", longitude: "7° 28' E" }
+    getUserCoordinates() {
+        return {
+            latitude: this.element.dataset.latitude,
+            longitude: this.element.dataset.longitude
+        }
+    }
+
+    setUserCoordinates(coordinates) {
+        this.element.dataset.latitude = coordinates.latitude;
+        this.element.dataset.longitude = coordinates.longitude;
+    }
+
+    setDistanceText() {
+        this.propertyTargets.forEach((propertyTarget) => {
+            let distanceFrom = getDistance(
+                this.getUserCoordinates(),
+                { latitude: propertyTarget.dataset.propertyLatitude, longitude: propertyTarget.dataset.propertyLongitude }
             );
-        })
-    }
 
+            propertyTarget.querySelector("#distance-away").textContent = `${Math.round(convertDistance(distanceFrom, 'km'))} kilometers away`;
+        });
+    }
 }
