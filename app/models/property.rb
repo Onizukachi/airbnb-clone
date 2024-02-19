@@ -9,6 +9,8 @@ class Property < ApplicationRecord
 
   has_many :reviews, as: :reviewable
   has_many_attached :images, dependent: :destroy
+  has_many :favorites, dependent: :destroy
+  has_many :favorited_users, through: :favorites, source: :user
 
   monetize :price_cents, allow_nil: true
 
@@ -23,9 +25,5 @@ class Property < ApplicationRecord
 
   def default_image
     images.first
-  end
-
-  def average_rating
-    reviews.average(:rating)
   end
 end

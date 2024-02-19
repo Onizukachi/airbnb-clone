@@ -16742,11 +16742,25 @@
     }
   };
 
+  // app/javascript/controllers/favorites_controller.js
+  var favorites_controller_default = class extends Controller {
+    favorite() {
+      if (this.element.dataset.favorited === "true") {
+        this.element.setAttribute("fill", "#ced4da");
+        this.element.dataset.favorited = "false";
+      } else {
+        this.element.setAttribute("fill", "red");
+        this.element.dataset.favorited = "true";
+      }
+    }
+  };
+
   // app/javascript/controllers/index.js
   application.register("header", header_controller_default);
   application.register("modal", modal_controller_default);
   application.register("users-by-email-auth", users_by_email_auth_controller_default);
   application.register("geolocation", geolocation_controller_default);
+  application.register("favorites", favorites_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());

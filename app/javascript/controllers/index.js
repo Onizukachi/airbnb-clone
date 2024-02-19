@@ -8,7 +8,9 @@ import HelloController from "./header_controller";
 import ModalController from "./modal_controller";
 import UsersByEmailAuthController from "./users_by_email_auth_controller";
 import GeolocationController from "./geolocation_controller"
+import FavoritesController from "./favorites_controller"
 application.register("header", HelloController);
 application.register("modal", ModalController);
 application.register("users-by-email-auth", UsersByEmailAuthController)
 application.register("geolocation", GeolocationController)
+application.register("favorites", FavoritesController)
