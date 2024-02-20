@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_19_080831) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_20_085504) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_19_080831) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_favorites_on_property_id"
+    t.index ["user_id", "property_id"], name: "index_favorites_on_user_id_and_property_id", unique: true
     t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
@@ -109,6 +110,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_19_080831) do
     t.index ["latitude", "longitude"], name: "index_properties_on_latitude_and_longitude"
   end
 
+  create_table "reservations", force: :cascade do |t|
+    t.bigint "property_id", null: false
+    t.bigint "user_id", null: false
+    t.date "reservation_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["property_id", "user_id", "reservation_date"], name: "idx_on_property_id_user_id_reservation_date_f6f3f94e43", unique: true
+    t.index ["property_id"], name: "index_reservations_on_property_id"
+    t.index ["user_id"], name: "index_reservations_on_user_id"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.string "reviewable_type", null: false
     t.bigint "reviewable_id", null: false
@@ -139,4 +151,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_19_080831) do
   add_foreign_key "favorites", "properties"
   add_foreign_key "favorites", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "reservations", "properties"
+  add_foreign_key "reservations", "users"
 end

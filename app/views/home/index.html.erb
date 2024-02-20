@@ -16,9 +16,13 @@
                 <svg
                   data-controller="favorites"
                   data-action="click->favorites#favorite"
-                  data-favorited=false
+                  data-favorited="<%= property.favorited_by?(current_user) %>"
+                  data-favorite-id="<%= property.favorites.find_by(user: current_user)&.id %>"
+                  data-user-logged-in="<%= user_signed_in? %>"
+                  data-property-id="<%= property.id %>"
+                  fill="<%= property.favorited_by?(current_user) ? 'red' : '#ced4da' %>"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="#ced4da" viewBox="0 0 24 24"
+                  viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="white"
                   class="w-7 h-7 cursor-pointer">
