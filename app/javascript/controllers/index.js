@@ -4,13 +4,20 @@
 
 import { application } from "./application"
 
-import HelloController from "./header_controller";
-import ModalController from "./modal_controller";
-import UsersByEmailAuthController from "./users_by_email_auth_controller";
-import GeolocationController from "./geolocation_controller"
 import FavoritesController from "./favorites_controller"
-application.register("header", HelloController);
-application.register("modal", ModalController);
-application.register("users-by-email-auth", UsersByEmailAuthController)
-application.register("geolocation", GeolocationController)
 application.register("favorites", FavoritesController)
+
+import GeolocationController from "./geolocation_controller"
+application.register("geolocation", GeolocationController)
+
+import HeaderController from "./header_controller"
+application.register("header", HeaderController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+import ShareController from "./share_controller"
+application.register("share", ShareController)
+
+import UsersByEmailAuthController from "./users_by_email_auth_controller"
+application.register("users-by-email-auth", UsersByEmailAuthController)

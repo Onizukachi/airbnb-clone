@@ -14062,104 +14062,6 @@
   application.debug = false;
   window.Stimulus = application;
 
-  // node_modules/el-transition/index.js
-  async function enter(element, transitionName = null) {
-    element.classList.remove("hidden");
-    await transition("enter", element, transitionName);
-  }
-  async function leave(element, transitionName = null) {
-    await transition("leave", element, transitionName);
-    element.classList.add("hidden");
-  }
-  async function toggle(element, transitionName = null) {
-    if (element.classList.contains("hidden")) {
-      await enter(element, transitionName);
-    } else {
-      await leave(element, transitionName);
-    }
-  }
-  async function transition(direction, element, animation) {
-    const dataset = element.dataset;
-    const animationClass = animation ? `${animation}-${direction}` : direction;
-    let transition2 = `transition${direction.charAt(0).toUpperCase() + direction.slice(1)}`;
-    const genesis = dataset[transition2] ? dataset[transition2].split(" ") : [animationClass];
-    const start2 = dataset[`${transition2}Start`] ? dataset[`${transition2}Start`].split(" ") : [`${animationClass}-start`];
-    const end = dataset[`${transition2}End`] ? dataset[`${transition2}End`].split(" ") : [`${animationClass}-end`];
-    addClasses(element, genesis);
-    addClasses(element, start2);
-    await nextFrame();
-    removeClasses(element, start2);
-    addClasses(element, end);
-    await afterTransition(element);
-    removeClasses(element, end);
-    removeClasses(element, genesis);
-  }
-  function addClasses(element, classes) {
-    element.classList.add(...classes);
-  }
-  function removeClasses(element, classes) {
-    element.classList.remove(...classes);
-  }
-  function nextFrame() {
-    return new Promise((resolve) => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(resolve);
-      });
-    });
-  }
-  function afterTransition(element) {
-    return new Promise((resolve) => {
-      const computedDuration = getComputedStyle(element).transitionDuration.split(",")[0];
-      const duration = Number(computedDuration.replace("s", "")) * 1e3;
-      setTimeout(() => {
-        resolve();
-      }, duration);
-    });
-  }
-
-  // app/javascript/controllers/header_controller.js
-  var header_controller_default = class extends Controller {
-    static targets = ["openUserMenu", "userAuthLink"];
-    connect() {
-      this.openUserMenuTarget.addEventListener("click", this.toggleDropdownMenu);
-      this.userAuthLinkTargets.forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          document.querySelector("#modal-trigger").click();
-        });
-      });
-    }
-    toggleDropdownMenu() {
-      toggle(document.querySelector("#menu-dropdown-items"));
-    }
-  };
-
-  // app/javascript/controllers/modal_controller.js
-  var modal_controller_default = class extends Controller {
-    static targets = ["closeButton"];
-    connect() {
-      document.querySelector("#modal-wrapper").addEventListener("click", this.closeModal);
-      this.closeButtonTarget.addEventListener("click", () => {
-        leave(document.querySelector("#modal-wrapper"));
-        leave(document.querySelector("#modal-backdrop"));
-        leave(document.querySelector("#modal-panel"));
-      });
-    }
-    showModal() {
-      enter(document.querySelector("#modal-wrapper"));
-      enter(document.querySelector("#modal-backdrop"));
-      enter(document.querySelector("#modal-panel"));
-    }
-    closeModal(event) {
-      const modalPanelClicked = document.getElementById("modal-panel").contains(event.target);
-      if (!modalPanelClicked && event.target.id !== "modal-trigger") {
-        leave(document.querySelector("#modal-wrapper"));
-        leave(document.querySelector("#modal-backdrop"));
-        leave(document.querySelector("#modal-panel"));
-      }
-    }
-  };
-
   // node_modules/axios/lib/helpers/bind.js
   function bind(fn, thisArg) {
     return function wrap() {
@@ -16297,31 +16199,48 @@
     mergeConfig: mergeConfig2
   } = axios_default;
 
-  // app/javascript/controllers/users_by_email_auth_controller.js
-  var users_by_email_auth_controller_default = class extends Controller {
-    static targets = ["email", "submit", "emailWrapper", "invalidSvg", "errorMessage"];
-    connect() {
-      this.submitTarget.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (this.emailTarget.value.length === 0) {
-          this.emailWrapperTarget.classList.remove("focus-within:ring-1");
-          this.emailWrapperTarget.classList.remove("focus-within:ring-black");
-          this.emailWrapperTarget.classList.remove("focus-within:border-black");
-          this.emailWrapperTarget.classList.add("invalid-inset-input-text-field");
-          this.invalidSvgTarget.classList.remove("hidden");
-          this.errorMessageTarget.classList.remove("hidden");
-        } else {
-          axios_default.get("api/users_by_email", {
-            params: { email: this.emailTarget.value },
-            headers: {
-              "ACCEPT": "application/json"
-            }
-          }).then((response) => {
-            Turbo.visit("users/sign_in");
-          }).catch((response) => {
-            Turbo.visit("users/sign_up");
-          });
-        }
+  // app/javascript/controllers/favorites_controller.js
+  var favorites_controller_default = class extends Controller {
+    HEADERS = { "ACCEPT": "application/json" };
+    favorite() {
+      if (this.element.dataset.userLoggedIn === "false") {
+        return document.querySelector('[data-header-target="userAuthLink"]').click();
+      }
+      if (this.element.dataset.favorited === "true") {
+        this.doUnfavorite();
+      } else {
+        this.doFavorite();
+      }
+    }
+    getFavoritePath() {
+      return "api/favorites";
+    }
+    getUnfavoritePath(favoriteId) {
+      return `api/favorites/${favoriteId}`;
+    }
+    doFavorite() {
+      axios_default({
+        method: "post",
+        url: this.getFavoritePath(),
+        data: {
+          property_id: this.element.dataset.propertyId
+        },
+        headers: this.HEADERS
+      }).then((response) => {
+        this.element.dataset.favoriteId = response.data.id;
+        this.element.setAttribute("fill", "red");
+        this.element.dataset.favorited = "true";
+      });
+    }
+    doUnfavorite() {
+      axios_default({
+        method: "delete",
+        url: this.getUnfavoritePath(this.element.dataset.favoriteId),
+        headers: this.HEADERS
+      }).then((response) => {
+        this.element.dataset.favoriteId = "";
+        this.element.setAttribute("fill", "#ced4da");
+        this.element.dataset.favorited = "false";
       });
     }
   };
@@ -16742,58 +16661,148 @@
     }
   };
 
-  // app/javascript/controllers/favorites_controller.js
-  var favorites_controller_default = class extends Controller {
-    HEADERS = { "ACCEPT": "application/json" };
-    favorite() {
-      if (this.element.dataset.userLoggedIn === "false") {
-        return document.querySelector('[data-header-target="userAuthLink"]').click();
-      }
-      if (this.element.dataset.favorited === "true") {
-        this.doUnfavorite();
-      } else {
-        this.doFavorite();
-      }
+  // node_modules/el-transition/index.js
+  async function enter(element, transitionName = null) {
+    element.classList.remove("hidden");
+    await transition("enter", element, transitionName);
+  }
+  async function leave(element, transitionName = null) {
+    await transition("leave", element, transitionName);
+    element.classList.add("hidden");
+  }
+  async function toggle(element, transitionName = null) {
+    if (element.classList.contains("hidden")) {
+      await enter(element, transitionName);
+    } else {
+      await leave(element, transitionName);
     }
-    getFavoritePath() {
-      return "api/favorites";
-    }
-    getUnfavoritePath(favoriteId) {
-      return `api/favorites/${favoriteId}`;
-    }
-    doFavorite() {
-      axios_default({
-        method: "post",
-        url: this.getFavoritePath(),
-        data: {
-          property_id: this.element.dataset.propertyId
-        },
-        headers: this.HEADERS
-      }).then((response) => {
-        this.element.dataset.favoriteId = response.data.id;
-        this.element.setAttribute("fill", "red");
-        this.element.dataset.favorited = "true";
+  }
+  async function transition(direction, element, animation) {
+    const dataset = element.dataset;
+    const animationClass = animation ? `${animation}-${direction}` : direction;
+    let transition2 = `transition${direction.charAt(0).toUpperCase() + direction.slice(1)}`;
+    const genesis = dataset[transition2] ? dataset[transition2].split(" ") : [animationClass];
+    const start2 = dataset[`${transition2}Start`] ? dataset[`${transition2}Start`].split(" ") : [`${animationClass}-start`];
+    const end = dataset[`${transition2}End`] ? dataset[`${transition2}End`].split(" ") : [`${animationClass}-end`];
+    addClasses(element, genesis);
+    addClasses(element, start2);
+    await nextFrame();
+    removeClasses(element, start2);
+    addClasses(element, end);
+    await afterTransition(element);
+    removeClasses(element, end);
+    removeClasses(element, genesis);
+  }
+  function addClasses(element, classes) {
+    element.classList.add(...classes);
+  }
+  function removeClasses(element, classes) {
+    element.classList.remove(...classes);
+  }
+  function nextFrame() {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(resolve);
+      });
+    });
+  }
+  function afterTransition(element) {
+    return new Promise((resolve) => {
+      const computedDuration = getComputedStyle(element).transitionDuration.split(",")[0];
+      const duration = Number(computedDuration.replace("s", "")) * 1e3;
+      setTimeout(() => {
+        resolve();
+      }, duration);
+    });
+  }
+
+  // app/javascript/controllers/header_controller.js
+  var header_controller_default = class extends Controller {
+    static targets = ["openUserMenu", "userAuthLink"];
+    connect() {
+      this.openUserMenuTarget.addEventListener("click", this.toggleDropdownMenu);
+      this.userAuthLinkTargets.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelector("#user-auth-modal-trigger").click();
+        });
       });
     }
-    doUnfavorite() {
-      axios_default({
-        method: "delete",
-        url: this.getUnfavoritePath(this.element.dataset.favoriteId),
-        headers: this.HEADERS
-      }).then((response) => {
-        this.element.dataset.favoriteId = "";
-        this.element.setAttribute("fill", "#ced4da");
-        this.element.dataset.favorited = "false";
+    toggleDropdownMenu() {
+      toggle(document.querySelector("#menu-dropdown-items"));
+    }
+  };
+
+  // app/javascript/controllers/modal_controller.js
+  var modal_controller_default = class extends Controller {
+    static targets = ["closeButton"];
+    static values = { triggerId: String };
+    connect() {
+      this.element.addEventListener("click", (event) => this.closeModal(event));
+      this.closeButtonTarget.addEventListener("click", () => {
+        leave(this.element);
+        leave(this.element.querySelector("#modal-backdrop"));
+        leave(this.element.querySelector("#modal-panel"));
+      });
+    }
+    showModal() {
+      enter(this.element);
+      enter(this.element.querySelector("#modal-backdrop"));
+      enter(this.element.querySelector("#modal-panel"));
+    }
+    closeModal(event) {
+      const modalPanelClicked = this.element.querySelector("#modal-panel").contains(event.target);
+      if (!modalPanelClicked && event.target.id !== this.triggerIdValue) {
+        leave(this.element);
+        leave(this.element.querySelector("#modal-backdrop"));
+        leave(this.element.querySelector("#modal-panel"));
+      }
+    }
+  };
+
+  // app/javascript/controllers/share_controller.js
+  var share_controller_default = class extends Controller {
+    share(e) {
+      document.querySelector("#share-modal-trigger").click();
+    }
+  };
+
+  // app/javascript/controllers/users_by_email_auth_controller.js
+  var users_by_email_auth_controller_default = class extends Controller {
+    static targets = ["email", "submit", "emailWrapper", "invalidSvg", "errorMessage"];
+    connect() {
+      this.submitTarget.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (this.emailTarget.value.length === 0) {
+          this.emailWrapperTarget.classList.remove("focus-within:ring-1");
+          this.emailWrapperTarget.classList.remove("focus-within:ring-black");
+          this.emailWrapperTarget.classList.remove("focus-within:border-black");
+          this.emailWrapperTarget.classList.add("invalid-inset-input-text-field");
+          this.invalidSvgTarget.classList.remove("hidden");
+          this.errorMessageTarget.classList.remove("hidden");
+        } else {
+          axios_default.get("api/users_by_email", {
+            params: { email: this.emailTarget.value },
+            headers: {
+              "ACCEPT": "application/json"
+            }
+          }).then((response) => {
+            Turbo.visit("users/sign_in");
+          }).catch((response) => {
+            Turbo.visit("users/sign_up");
+          });
+        }
       });
     }
   };
 
   // app/javascript/controllers/index.js
+  application.register("favorites", favorites_controller_default);
+  application.register("geolocation", geolocation_controller_default);
   application.register("header", header_controller_default);
   application.register("modal", modal_controller_default);
+  application.register("share", share_controller_default);
   application.register("users-by-email-auth", users_by_email_auth_controller_default);
-  application.register("geolocation", geolocation_controller_default);
-  application.register("favorites", favorites_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());

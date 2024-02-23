@@ -2,11 +2,12 @@
   id="modal-wrapper"
   class="hidden relative z-10"
   data-controller="modal"
+  data-modal-trigger-id-value="<%= trigger_id %>"
   aria-labelledby="modal-title"
   role="dialog"
   aria-modal="true">
 
-  <div class="hidden" id="modal-trigger" data-action="click->modal#showModal"></div>
+  <div class="hidden" id=<%= trigger_id %> data-action="click->modal#showModal"></div>
 
   <div
     id="modal-backdrop"

@@ -3,29 +3,30 @@ import { enter, leave, toggle} from 'el-transition'
 
 export default class extends Controller {
     static targets = ['closeButton'];
+    static values = { triggerId: String }
 
     connect() {
-       document.querySelector('#modal-wrapper').addEventListener('click', this.closeModal);
-       this.closeButtonTarget.addEventListener('click', () => {
-           leave(document.querySelector('#modal-wrapper'));
-           leave(document.querySelector('#modal-backdrop'));
-           leave(document.querySelector('#modal-panel'));
+        this.element.addEventListener('click', (event) => this.closeModal(event));
+        this.closeButtonTarget.addEventListener('click', () => {
+           leave(this.element);
+           leave(this.element.querySelector('#modal-backdrop'));
+           leave(this.element.querySelector('#modal-panel'));
        })
     }
 
     showModal() {
-        enter(document.querySelector('#modal-wrapper'));
-        enter(document.querySelector('#modal-backdrop'));
-        enter(document.querySelector('#modal-panel'));
+        enter(this.element);
+        enter(this.element.querySelector('#modal-backdrop'));
+        enter(this.element.querySelector('#modal-panel'));
     }
 
     closeModal(event) {
-        const modalPanelClicked = document.getElementById('modal-panel').contains(event.target);
+        const modalPanelClicked = this.element.querySelector('#modal-panel').contains(event.target);
 
-        if (!modalPanelClicked && event.target.id !== 'modal-trigger') {
-            leave(document.querySelector('#modal-wrapper'));
-            leave(document.querySelector('#modal-backdrop'));
-            leave(document.querySelector('#modal-panel'));
+        if (!modalPanelClicked && event.target.id !== this.triggerIdValue) {
+            leave(this.element);
+            leave(this.element.querySelector('#modal-backdrop'));
+            leave(this.element.querySelector('#modal-panel'));
         }
     }
 }
