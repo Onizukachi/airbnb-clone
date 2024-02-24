@@ -1,52 +1,60 @@
-<div data-controller="users-by-email-auth">
+<div>
+  <div class="mb-4 flex">
+    <div class="grow-0 p-1 rounded-full hover:bg-gray-200 cursor-pointer" data-modal-target="closeButton">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </div>
+  </div>
+
   <div>
-    <div class="mb-4 flex">
-      <div class="grow-0 p-1 rounded-full hover:bg-gray-200 cursor-pointer" data-modal-target="closeButton">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg>
-      </div>
+   <p class="mb-4 text-2xl font-medium antialiased">Share this place</p>
+   <div class="mb-5 relative flex items-center space-x-3">
+     <div class="flex-shrink-0">
+       <%= image_tag @property.default_image, class: 'h-16 w-16 rounded-lg' %>
+     </div>
+     <div class="min-w-0 flex-1 font-normal text-gray-700">
+       <%= @property.average_rating.round(2) %> · <%= @property.reviews_count %> reviews | <%= @property.city %>, <%= @property.state %> <%= @property.country %>
+     </div>
+   </div>
 
-      <div class="grow">
-        <h3 class="pr-7 text-md text-center font-semibold leading-6 text-gray-900" id="modal-title">Log in or sign up</h3>
-      </div>
-    </div>
-
-    <div class="relative">
-      <div class="absolute inset-0 flex items-center" aria-hidden="true">
-        <div class="w-full border-t border-gray-300"></div>
-      </div>
-    </div>
-
-    <div class="pt-4">
-      <h4 class="text-2xl leading-6 font-medium text-gray-900 mt-2">Welcome to Airbnb</h4>
-      <div data-users-by-email-auth-target="emailWrapper" class="relative rounded-md mt-6 px-3 py-2 shadow-sm border border-gray-300 ring-inset ring-gray-300 focus-within:ring-1 focus-within:ring-black focus-within:border-black">
-        <label for="email" class="block text-xs font-medium text-gray-900">Email</label>
-        <input data-users-by-email-auth-target="email" type="text" name="email" id="email" class="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="hikaru@mail.ru">
-        <div data-users-by-email-auth-target="invalidSvg" class="hidden pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-          <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-          </svg>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="cursor-pointer hover:bg-gray-50 relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-5 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div class="flex-shrink-0 mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="display: block; height: 32px; width: 32px; fill: currentcolor;"><path d="M25 5a4 4 0 0 1 4 4v17a5 5 0 0 1-5 5H12a5 5 0 0 1-5-5V10a5 5 0 0 1 5-5h13zm0 2H12a3 3 0 0 0-3 3v16a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V9a2 2 0 0 0-2-2zm-3-6v2H11a6 6 0 0 0-6 5.78V22H3V9a8 8 0 0 1 7.75-8H22z"></path></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-md font-medium text-gray-900">Copy Link</p>
         </div>
       </div>
-      <p data-users-by-email-auth-target="errorMessage" class="hidden mt-2 text-sm text-red-600" id="email-error">Not a valid email address.</p>
+
+      <div class="cursor-pointer hover:bg-gray-50 relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-5 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div class="flex-shrink-0 mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="border-radius: 5px; display: block; height: 32px; width: 32px;"><path fill="#25d366" d="M32 0v32H0V0z"></path><path fill="#FFF" d="m4 28 1.7-6.16a11.82 11.82 0 0 1-1.6-5.95C4.1 9.33 9.46 4 16.05 4a11.9 11.9 0 0 1 8.45 3.49A11.8 11.8 0 0 1 28 15.9a11.94 11.94 0 0 1-17.66 10.45zm6.63-3.8a9.93 9.93 0 0 0 15.35-8.3A9.9 9.9 0 0 0 16.05 6a9.92 9.92 0 0 0-9.93 9.9c0 2.22.65 3.88 1.75 5.63l-1 3.64 3.76-.98zm11.36-5.52c-.07-.13-.27-.2-.57-.35-.3-.15-1.75-.86-2.03-.96-.27-.1-.46-.15-.66.15s-.77.96-.94 1.15-.35.23-.65.08c-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.04s-.02-.46.13-.6l.44-.52c.15-.17.2-.3.3-.5.1-.2.05-.36-.02-.51-.08-.15-.67-1.6-.92-2.2-.24-.57-.48-.5-.66-.5l-.57-.01a1.09 1.09 0 0 0-.8.37c-.27.3-1.03 1.01-1.03 2.46s1.06 2.86 1.2 3.06c.16.2 2.1 3.18 5.08 4.45.7.3 1.26.5 1.69.63.7.22 1.36.19 1.87.11.57-.08 1.75-.71 2-1.4s.25-1.28.17-1.4z"></path></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-md font-medium text-gray-900">WhatsApp</p>
+        </div>
+      </div>
+
+      <div class="cursor-pointer hover:bg-gray-50 relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-5 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div class="flex-shrink-0 mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="border-radius: 5px; display: block; height: 32px; width: 32px;"><path fill="#1877F2" d="M32 0v32H0V0z"></path><path fill="#FFF" d="M22.94 16H18.5v-3c0-1.27.62-2.5 2.6-2.5h2.02V6.56s-1.83-.31-3.58-.31c-3.65 0-6.04 2.21-6.04 6.22V16H9.44v4.63h4.06V32h5V20.62h3.73l.7-4.62z"></path></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-md font-medium text-gray-900">Facebook</p>
+        </div>
+      </div>
+
+      <div class="cursor-pointer hover:bg-gray-50 relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-5 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div class="flex-shrink-0 mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="border-radius: 5px; display: block; height: 32px; width: 32px;"><path fill="#1DA1F2" d="M0 0h32v32H0z"></path><path fill="#FFF" d="M18.66 7.99a4.5 4.5 0 0 0-2.28 4.88A12.31 12.31 0 0 1 7.3 8.25a4.25 4.25 0 0 0 1.38 5.88c-.69 0-1.38-.13-2-.44a4.54 4.54 0 0 0 3.5 4.31 4.3 4.3 0 0 1-2 .06 4.64 4.64 0 0 0 4.18 3.13A8.33 8.33 0 0 1 5.82 23a12.44 12.44 0 0 0 19.31-11.19 7.72 7.72 0 0 0 2.2-2.31 8.3 8.3 0 0 1-2.5.75 4.7 4.7 0 0 0 2-2.5c-.88.5-1.82.88-2.82 1.06A4.5 4.5 0 0 0 18.66 8z"></path></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-md font-medium text-gray-900">Twitter</p>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="my-5 sm:my-6">
-    <button data-users-by-email-auth-target="submit" type="button" class="w-full rounded-lg px-6 py-3 text-base font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 airbnb-pick-gradient">Continue</button>
-  </div>
 </div>
-<div class="relative">
-  <div class="absolute inset-0 flex items-center" aria-hidden="true">
-    <div class="w-full border-t border-gray-300"></div>
-  </div>
-  <div class="relative flex justify-center">
-    <span class="bg-white px-2 text-sm text-gray-500"> or </span>
-  </div>
-</div>
-<div class="mt-5 sm:mt-6">
-  <button type="button" class="w-full inline-flex justify-center items-center rounded-lg bg-white px-6 py-3 text-base font-medium text-gray-700 border border-black shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="display: block; height: 20px; width: 20px; margin-right: 10px" aria-hidden="true" role="presentation" focusable="false"><path fill="#1877F2" d="M32 0v32H0V0z"></path><path fill="#FFF" d="M22.94 16H18.5v-3c0-1.27.62-2.5 2.6-2.5h2.02V6.56s-1.83-.31-3.58-.31c-3.65 0-6.04 2.21-6.04 6.22V16H9.44v4.63h4.06V32h5V20.62h3.73l.7-4.62z"></path></svg>
-    Continue with Facebook
-  </button>
-</div>
+

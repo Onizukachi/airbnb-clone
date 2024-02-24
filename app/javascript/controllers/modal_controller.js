@@ -21,6 +21,8 @@ export default class extends Controller {
     }
 
     closeModal(event) {
+        console.log(event)
+        console.log(this.element.querySelector('#modal-panel'))
         const modalPanelClicked = this.element.querySelector('#modal-panel').contains(event.target);
 
         if (!modalPanelClicked && event.target.id !== this.triggerIdValue) {
