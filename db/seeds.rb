@@ -2,7 +2,7 @@
   property = Property.create!(
     name: Faker::Lorem.word,
     headline: Faker::Lorem.sentence,
-    description: Faker::Lorem.paragraph,
+    description: Faker::Lorem.paragraphs(number: 30).join(" "),
     address_1: Faker::Address.full_address,
     city: Faker::Address.city,
     state: Faker::Address.state,

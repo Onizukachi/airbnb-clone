@@ -15,15 +15,15 @@ export default class extends Controller {
                 this.invalidSvgTarget.classList.remove('hidden');
                 this.errorMessageTarget.classList.remove('hidden');
             } else {
-                axios.get('api/users_by_email', {
+                axios.get('/api/users_by_email', {
                     params: { email: this.emailTarget.value },
                     headers: {
                         'ACCEPT': 'application/json'
                     }
                 }).then((response) => {
-                    Turbo.visit('users/sign_in');
+                    Turbo.visit('/users/sign_in');
                 }).catch((response) => {
-                    Turbo.visit('users/sign_up');
+                    Turbo.visit('/users/sign_up');
                 })
             }
         })

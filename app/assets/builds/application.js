@@ -16202,7 +16202,8 @@
   // app/javascript/controllers/favorites_controller.js
   var favorites_controller_default = class extends Controller {
     HEADERS = { "ACCEPT": "application/json" };
-    favorite() {
+    favorite(e) {
+      e.preventDefault();
       if (this.element.dataset.userLoggedIn === "false") {
         return document.querySelector('[data-header-target="userAuthLink"]').click();
       }
@@ -16213,10 +16214,10 @@
       }
     }
     getFavoritePath() {
-      return "api/favorites";
+      return "/api/favorites";
     }
     getUnfavoritePath(favoriteId) {
-      return `api/favorites/${favoriteId}`;
+      return `/api/favorites/${favoriteId}`;
     }
     doFavorite() {
       axios_default({
@@ -16239,7 +16240,7 @@
         headers: this.HEADERS
       }).then((response) => {
         this.element.dataset.favoriteId = "";
-        this.element.setAttribute("fill", "#ced4da");
+        this.element.setAttribute("fill", this.element.dataset.defaultFill);
         this.element.dataset.favorited = "false";
       });
     }
@@ -16781,15 +16782,15 @@
           this.invalidSvgTarget.classList.remove("hidden");
           this.errorMessageTarget.classList.remove("hidden");
         } else {
-          axios_default.get("api/users_by_email", {
+          axios_default.get("/api/users_by_email", {
             params: { email: this.emailTarget.value },
             headers: {
               "ACCEPT": "application/json"
             }
           }).then((response) => {
-            Turbo.visit("users/sign_in");
+            Turbo.visit("/users/sign_in");
           }).catch((response) => {
-            Turbo.visit("users/sign_up");
+            Turbo.visit("/users/sign_up");
           });
         }
       });
@@ -16812,6 +16813,13 @@
     }
   };
 
+  // app/javascript/controllers/property_controller.js
+  var property_controller_default = class extends Controller {
+    readDescription() {
+      document.querySelector("#property-description-modal-trigger").click();
+    }
+  };
+
   // app/javascript/controllers/index.js
   application.register("favorites", favorites_controller_default);
   application.register("geolocation", geolocation_controller_default);
@@ -16820,6 +16828,7 @@
   application.register("share", share_controller_default);
   application.register("users-by-email-auth", users_by_email_auth_controller_default);
   application.register("share-modal", share_modal_controller_default);
+  application.register("property", property_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());

@@ -4,7 +4,9 @@ import axios from "axios";
 export default class extends Controller {
     HEADERS = { 'ACCEPT': 'application/json' }
 
-    favorite() {
+    favorite(e) {
+        e.preventDefault();
+
         if (this.element.dataset.userLoggedIn === 'false') {
             return document.querySelector('[data-header-target="userAuthLink"]').click();
         }
@@ -17,11 +19,11 @@ export default class extends Controller {
     }
 
     getFavoritePath() {
-        return 'api/favorites';
+        return '/api/favorites';
     }
 
     getUnfavoritePath(favoriteId) {
-        return `api/favorites/${favoriteId}`;
+        return `/api/favorites/${favoriteId}`;
     }
 
     doFavorite() {
@@ -46,7 +48,7 @@ export default class extends Controller {
             headers: this.HEADERS
         }).then((response) => {
             this.element.dataset.favoriteId = '';
-            this.element.setAttribute("fill", "#ced4da");
+            this.element.setAttribute("fill", this.element.dataset.defaultFill);
             this.element.dataset.favorited = 'false';
         })
     }

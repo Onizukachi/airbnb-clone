@@ -21,6 +21,7 @@
                   data-favorite-id="<%= property.favorites.find_by(user: current_user)&.id %>"
                   data-user-logged-in="<%= user_signed_in? %>"
                   data-property-id="<%= property.id %>"
+                  data-default-fill="#ced4da"
                   fill="<%= property.favorited_by?(current_user) ? 'red' : '#ced4da' %>"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
