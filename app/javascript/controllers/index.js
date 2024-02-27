@@ -21,3 +21,6 @@ application.register("share", ShareController)
 
 import UsersByEmailAuthController from "./users_by_email_auth_controller"
 application.register("users-by-email-auth", UsersByEmailAuthController)
+
+import ShareModal from "./share_modal_controller"
+application.register("share-modal", ShareModal)

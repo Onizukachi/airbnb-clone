@@ -16751,8 +16751,6 @@
       enter(this.element.querySelector("#modal-panel"));
     }
     closeModal(event) {
-      console.log(event);
-      console.log(this.element.querySelector("#modal-panel"));
       const modalPanelClicked = this.element.querySelector("#modal-panel").contains(event.target);
       if (!modalPanelClicked && event.target.id !== this.triggerIdValue) {
         leave(this.element);
@@ -16798,6 +16796,22 @@
     }
   };
 
+  // app/javascript/controllers/share_modal_controller.js
+  var share_modal_controller_default = class extends Controller {
+    copy() {
+      navigator.clipboard.writeText(this.element.dataset.shareUrl);
+    }
+    shareWhatsapp() {
+      window.open("https://web.whatsapp.com", "_blank", "noopener, noreferrer");
+    }
+    shareTwitter() {
+      window.open("https://twitter.com", "_blank", "noopener, noreferrer");
+    }
+    shareFacebook() {
+      window.open("https://www.facebook.com/", "_blank", "noopener, noreferrer");
+    }
+  };
+
   // app/javascript/controllers/index.js
   application.register("favorites", favorites_controller_default);
   application.register("geolocation", geolocation_controller_default);
@@ -16805,6 +16819,7 @@
   application.register("modal", modal_controller_default);
   application.register("share", share_controller_default);
   application.register("users-by-email-auth", users_by_email_auth_controller_default);
+  application.register("share-modal", share_modal_controller_default);
 
   // app/javascript/application.js
   var import_flowbite_turbo = __toESM(require_flowbite_turbo());
