@@ -27,3 +27,6 @@ application.register("share-modal", ShareModal)
 
 import Property from "./property_controller"
 application.register("property", Property)
+
+import ReservationComponent from "./reservation_component_controller"
+application.register("reservation-component", ReservationComponent)
