@@ -1,5 +1,6 @@
 class Review < ApplicationRecord
   belongs_to :reviewable, polymorphic: true, counter_cache: true
+  belongs_to :user
 
   validates :title, presence: true
   validates :body, presence: true
