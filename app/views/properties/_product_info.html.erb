@@ -42,8 +42,8 @@
         </div>
         <dl class="space-y-6 py-6">
           <div class="flex items-center justify-between">
-            <dt class="text-sm"><%= humanized_money_with_symbol @property.price %> x <span data-reservation-component-target="numOfNights">7</span> nights</dt>
-            <dd class="text-sm font-medium text-gray-900">$<span data-reservation-component-target="nightlyTotal">64.00</span></dd>
+            <dt class="text-sm"><%= humanized_money_with_symbol @property.price %> x <span data-reservation-component-target="numOfNights">0<span> nights</dt>
+            <dd class="text-sm font-medium text-gray-900">$<span data-reservation-component-target="nightlyTotal">0.00</span></dd>
           </div>
           <div class="flex items-center justify-between">
             <dt class="text-sm">Cleaning fee</dt>
@@ -51,16 +51,20 @@
           </div>
           <div class="flex items-center justify-between">
             <dt class="text-sm">Service fee</dt>
-            <dd class="text-sm font-medium text-gray-900">$<span data-reservation-component-target="serviceFee">5.00</span></dd>
+            <dd class="text-sm font-medium text-gray-900">$<span data-reservation-component-target="serviceFee">0.00</span></dd>
           </div>
           <div class="flex items-center justify-between border-t border-gray-200 pt-6">
             <dt class="text-base font-medium">Total</dt>
-            <dd class="text-base font-medium text-gray-900">$<span data-reservation-component-target="total">75.52</span></dd>
+            <dd class="text-base font-medium text-gray-900">$<span data-reservation-component-target="total">0.00</span></dd>
           </div>
         </dl>
 
         <div class="px-4 sm:px-6">
-          <button type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Confirm order</button>
+          <button
+            data-submit-url="<%= new_property_reservation_path(@property) %>"
+            data-action="reservation-component#submitReservationComponent"
+            type="submit"
+            class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Confirm order</button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { Datepicker } from "vanillajs-datepicker";
 import { isEmpty } from "lodash-es";
+import Swal from 'sweetalert2'
 
 // Connects to data-controller="reservation-component"
 export default class extends Controller {
@@ -22,7 +23,9 @@ export default class extends Controller {
                 minDate: date
             });
 
-            this.updateNightlyTotal();
+            if (!isEmpty(this.checkoutTarget.value)) {
+                this.updateNightlyTotal();
+            }
         });
 
         this.checkoutTarget.addEventListener('changeDate', (e) => {
@@ -32,15 +35,13 @@ export default class extends Controller {
                 maxDate: date
             });
 
-            this.updateNightlyTotal();
+            if (!isEmpty(this.checkinTarget.value)) {
+                this.updateNightlyTotal();
+            }
         });
     }
 
     numberOfNights() {
-        if (isEmpty(this.checkinTarget.value) || isEmpty(this.checkoutTarget.value)) {
-            return 0
-        }
-
         let checkinDate = new Date(this.checkinTarget.value);
         let checkoutDate = new Date(this.checkoutTarget.value);
 
@@ -66,10 +67,39 @@ export default class extends Controller {
         this.updateTotal();
     }
 
+    calculateTotal() {
+        return (parseFloat(this.calculateNightlyTotal()) + parseFloat(this.element.dataset.cleaningFee) + parseFloat(this.calculateServiceFee())).toFixed(2)
+    }
+
     updateTotal() {
-        console.log(this.calculateNightlyTotal())
-        console.log( this.element.dataset.cleaningFee)
-        console.log( this.calculateServiceFee())
-        this.totalTarget.textContent = (parseFloat(this.calculateNightlyTotal()) + parseFloat(this.element.dataset.cleaningFee) + parseFloat(this.calculateServiceFee())).toFixed(2)
+        this.totalTarget.textContent = this.calculateTotal();
+    }
+
+    buildReservationParams() {
+        let params = {
+            checkin_date: this.checkinTarget.value,
+            checkout_date: this.checkoutTarget.value,
+            subtotal: this.nightlyTotalTarget.textContent,
+            cleaning_fee: this.element.dataset.cleaningFee,
+            service_fee: this.serviceFeeTarget.textContent,
+            total: this.totalTarget.textContent
+        }
+
+        return new URLSearchParams(params).toString();
+    }
+
+    buildSubmitUrl(url) {
+        return `${url}?${this.buildReservationParams()}`;
+    }
+
+    submitReservationComponent(e) {
+        if (isEmpty(this.checkinTarget.value) || isEmpty(this.checkoutTarget.value)) {
+            Swal.fire({
+                icon: "error",
+                text: "Please select both the checking and the checkout dates",
+            });
+        } else {
+            Turbo.visit(this.buildSubmitUrl(e.target.dataset.submitUrl))
+        }
     }
 }
