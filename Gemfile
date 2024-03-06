@@ -17,6 +17,8 @@ gem "image_processing", ">= 1.2"
 
 gem 'jsonapi-serializer'
 
+gem 'stripe-rails'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
@@ -67,6 +69,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'
   gem 'factory_bot_rails'
   gem 'byebug'
+  gem 'dotenv'
 end
 
 group :development do

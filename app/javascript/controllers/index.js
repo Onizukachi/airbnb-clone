@@ -30,3 +30,6 @@ application.register("property", Property)
 
 import ReservationComponent from "./reservation_component_controller"
 application.register("reservation-component", ReservationComponent)
+
+import StripeElements from "./stripe_elements_controller"
+application.register("stripe-elements", StripeElements)
